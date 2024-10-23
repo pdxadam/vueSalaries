@@ -4,5 +4,5 @@
     
 </script>
 <template>
-    
+    <header>test</header>
 </template>
