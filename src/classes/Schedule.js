@@ -31,6 +31,17 @@ export default class Schedule{
         console.log(s);
         return s;
     }
+    static fromJsonSchedule(json){
+        temp = JSON.parse(json);
+        //should check that it has the right structure. 
+        newCal = new Schedule(temp.title);
+        newCal.rows = temp.rows;
+        newCal.cols = temp.cols;
+        newCal.colTitles = temp.colTitles;
+        newCal.rowTitles = temp.rowTitles;
+        newCal.cells = temp.cells;
+        return newCal;
+    }
     getAnnualCost(){
         var totalCost = 0;
         for (let row of this.cells){
@@ -72,6 +83,7 @@ export default class Schedule{
         this.cells.splice(index, 1);
         this.rowTitles.splice(index, 1);
     }
+
 
 
 }
