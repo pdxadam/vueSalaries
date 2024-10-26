@@ -1,9 +1,12 @@
 <script setup>
     import Schedule from '../classes/Schedule.js';
-    import Cellvue from '../components/Cellvue.vue';
+    import Cellvue from './Cellvue.vue';
     import { Button } from 'buefy'
     import { ref } from 'vue';
-    const schedule = ref(Schedule.SeedSchedule("TestSchedule", 15, 7));
+    
+    const props = defineProps({
+        schedule: Schedule,
+    });
     const inEditMode = ref(false);
     const currEditMode = ref("0"); //1 = salaries 2 = FTE
     function addColumn(){
@@ -24,9 +27,9 @@
     }
 </script>
 <template>
-    <header v-if="currEditMode == 0">{{  schedule.title }}</header>
-    <header v-else><input v-model = schedule.title></header>
-    <label for="chkEdit">Edit</label><input type="checkbox" id = chkEdit inputID="radEditNone" v-model="inEditMode">
+    <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
+    <h1 v-else><input v-model = schedule.title></h1>
+    <h5>{{ schedule.description }}</h5>
     <!-- <label for="radEditNone">No Edit</label><RadioButton v-model = "currEditMode" value="0" />
     <label for="radEditSalary">Edit Salaries</label><RadioButton inputID="radEditSalary" v-model = "currEditMode" value="1" />
     <label for="radEditFTE">Edit FTE</label><RadioButton inputID="radEditFTE" v-model = "currEditMode" value="2" /> -->

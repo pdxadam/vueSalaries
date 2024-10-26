@@ -1,15 +1,17 @@
 import Cell from './Cell.js';
 export default class Schedule{
     title = "New Schedule";
+    desciption = "";
     rows = 0;
     cols = 0;
     colTitles = [];
     rowTitles = [];
     cells = [];
 
-    constructor(title){
+    constructor(title, description = ""){
         this.title = title;
-    }
+        this.description = description;
+        }
     static SeedSchedule(title, rows, columns){
         this.rows = rows;
         this.cols = columns;
@@ -32,9 +34,9 @@ export default class Schedule{
         return s;
     }
     static fromJsonSchedule(json){
-        temp = JSON.parse(json);
+        let temp = JSON.parse(json);
         //should check that it has the right structure. 
-        newCal = new Schedule(temp.title);
+        let newCal = new Schedule(temp.title);
         newCal.rows = temp.rows;
         newCal.cols = temp.cols;
         newCal.colTitles = temp.colTitles;
