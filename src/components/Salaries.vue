@@ -25,6 +25,10 @@
             schedule.value.removeRow(i);
         }
     }
+    var USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 </script>
 <template>
     <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
@@ -36,7 +40,20 @@
     <b-radio v-model = "currEditMode" name="radNoEdit" native-value=0>View Only</b-radio>
     <b-radio v-model = "currEditMode" name="radEditSalary" native-value=1>Edit Salaries</b-radio>
     <b-radio v-model = "currEditMode" name="radEditFTE" native-value=2>Edit FTE</b-radio>
-    <div>{{ schedule.getAnnualCost() }}</div>
+    <div>FTE Count: {{ schedule.countFTE() }}</div>
+    <div v-if = "currEditMode == 0">
+        Insurance amount: {{ USDollar.format(schedule.insurance) }}
+    </div>
+    <div v-else>
+        <b-field>Insurnace Cost
+            <b-input type="text" v-model = schedule.insurance />
+        </b-field>
+    </div>
+    <div>
+        Insurance Cost: {{ USDollar.format(schedule.calcInsuranceCost()) }}
+    </div>
+    <div>Salary Cost: {{USDollar.format(schedule.getSalaryCost()) }}</div>
+    <div>Total Cost: {{ USDollar.format(schedule.getAnnualCost()) }}</div>
     <table>
         <thead>
         <tr>
@@ -93,6 +110,7 @@
         font-weight: bold;
     }
     td:hover::before{
+        /*TODO: This column highlight is not working */
         content: '';
         height: 2000px;
         top: -1000px;

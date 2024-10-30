@@ -1,7 +1,7 @@
 <script setup>
     import Cell from '../classes/Cell'
     const props = defineProps({
-        thisCell: Cell,
+        thisCell: Object, //Cell
         isFocused: String,
     })
     
