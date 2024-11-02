@@ -9,7 +9,7 @@ export default class Scenario{
         this.title = title;
         this.description = description;
     }
-
+    
     static CreateFromSchedule(scenarioTitle, description, schedule){
         //copies the schedule and creates a scenario with it a the first schedule in the array.
 

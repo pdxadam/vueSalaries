@@ -22,29 +22,26 @@
         isModalActive.value = false;
     }
     function copySchedule(newSched){
-        console.log(props.scenario.schedules.length + "copy");
         props.scenario.schedules.push(newSched);
-        console.log(props.scenario.schedules.length+ "copy");
         alert("copied!");
     }
     function createScenario(newSchedule, newTitle){
-        alert(newTitle);
         emit('createScenario', newSchedule, newTitle);
-        //TODO: handel creating the new Scenario
     }
     var USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
-    //TODO: Add Insurance and other costs to a scenario
+
 </script>
 <template>
+    <section>
     <h1>Scenario: {{ scenario.title }}</h1>
     <h5>{{ scenario.description }}</h5>
     <h5>Total Cost of this scenario: {{ USDollar.format(scenario.getTotalCost()) }}</h5>
-    <b-tabs type="is-boxed" expanded>
+    <b-tabs type="is-boxed" >
         <b-tab-item v-for = "(schedule, index) in scenario.schedules" :label = schedule.title>
-            <b-button @click="isModalActive = true">Copy Schedule</b-button>
+            <b-button type="is-primary" @click="isModalActive = true">Copy Schedule</b-button>
             <b-modal
             v-model="isModalActive"
             has-modal-card
@@ -56,12 +53,25 @@
             aria-modal>
                 <modal_newScenario @close="closeModal()"  @copySchedule="copySchedule" @createScenario="createScenario" :schedule = schedule />
             </b-modal>
-            <b-button type="is-primary" @click="deleteSchedule(index);">Delete Schedule</b-button>
+            <b-button @click="deleteSchedule(index);">Delete Schedule</b-button>
             <Salaries :schedule = schedule />
         </b-tab-item>
     </b-tabs>
-
+</section>
 </template>
 <style scoped>
+    section{
+        border: 1px solid black;
+    }
+    h1{
+        font-size: 2em;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+    }
+    h5{
+        font-family: 'Times New Roman', Times, serif;
+        background-color: lightgray;
+        margin: 3px;
+    }
 
 </style>

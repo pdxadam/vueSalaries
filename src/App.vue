@@ -5,15 +5,13 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
+    <span>McLain's Contract Analysis</span>
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/contract">Contract Scenarios</RouterLink>
+      <nav> 
+        <RouterLink to="/contract">Contract Scenarios</RouterLink>       
+        <RouterLink to="/about">About</RouterLink>        
       </nav>
     </div>
   </header>
@@ -25,6 +23,15 @@ import HelloWorld from './components/HelloWorld.vue'
 header {
   line-height: 1.5;
   max-height: 100vh;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  border-bottom: 2px solid rgb(225, 236, 247);
+}
+header span{
+  font-size: 2.5em;
+  display: block;
+  color: rgb(80, 46, 171);
+  font-family: papyrus, cursive;
 }
 
 .logo {
@@ -57,8 +64,8 @@ nav a:first-of-type {
   border: 0;
 }
 
-@media (min-width: 1024px) {
-  header {
+ @media (min-width: 1024px) {
+ /* header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
@@ -72,7 +79,7 @@ nav a:first-of-type {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
-  }
+  } */
 
   nav {
     text-align: left;

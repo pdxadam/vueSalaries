@@ -1,6 +1,5 @@
 import Cell from './Cell.js';
 export default class Schedule{
-    //TODO: Update Schedule View to handle the duration component
     //TODO: Include an 'add-on costs' section
     //TODO: Add an 'associated payroll costs' feature -- is that by schedule or by scenario? 
     //TODO: Add a feature to consider inflation
@@ -52,6 +51,7 @@ export default class Schedule{
         }
         //should check that it has the right structure. 
         let newCal = new Schedule(temp.title);
+        newCal.description = temp.description;
         newCal.rows = temp.rows;
         newCal.cols = temp.cols;
         newCal.colTitles = temp.colTitles;
@@ -78,20 +78,25 @@ export default class Schedule{
         this.cols++;
         this.colTitles.push("New");
         for(let row of this.cells){
-            row.push(new Cell(0.0));
+            let newCell = new Cell(0.0);
+            newCell.fte = 0;
+
+            row.push(newCell);
         }
     }
     countFTE(){
-        var count = 0;
+        let count = 0;
+        let countCells = 0;
         for (var row of this.cells){            
             for (var cell of row){
-                count += cell.fte;
+                count += parseFloat(cell.fte);
+                countCells++;
             }
         }
         return count;
     }
     calcInsuranceCost(){
-        let totalFTE = this.countFTE();
+        let totalFTE = parseFloat(this.countFTE());
         return totalFTE * this.insurance * this.durationInMonths;
     }
     addRow(seq = -1){

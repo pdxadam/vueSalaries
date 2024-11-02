@@ -2,20 +2,19 @@
     import Cell from '../classes/Cell'
     const props = defineProps({
         thisCell: Object, //Cell
-        isFocused: String,
+        editMode: String,
     })
     
 
 </script>
 <template>
-    <td v-if = "isFocused == 1">
+    <td v-if = "editMode == 1">
         <input type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" v-model = thisCell.salary >
     </td>
-    <td v-else-if = "isFocused == 2">
-        <input type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" v-model = thisCell.fte >
+    <td v-else-if = "editMode == 2">
+        <input type="text" value=""  v-model = thisCell.fte >
     </td>
-    <td v-else tabindex = "0">
-        
+    <td v-else tabindex = "0">        
         <span class='salary'>${{ thisCell.salary }}</span>
         <span class='fte'>{{  thisCell.fte }} fte</span>
     </td>
@@ -23,7 +22,9 @@
 </template>
 <style scoped>
     
-
+    .salary{
+        font-size: 0.8em;
+    }
     
     .fte{
         position: absolute;
@@ -32,9 +33,8 @@
         bottom: 0px;
         color: gray;
     }
-    input[type=text]{
-        width: 40px;
-        
+    input{
+        width: 80px;
 
     }
 </style>

@@ -3,26 +3,27 @@
     import Cellvue from './Cellvue.vue';
     import { Button } from 'buefy'
     import { ref } from 'vue';
-    
+    //TODO: Something is breaking when we add a column and then edit FTE. 
+    //TODO: Is it possible to navigate the editing mode with arrow keys?
     const props = defineProps({
         schedule: Schedule,
     });
     const inEditMode = ref(false);
     const currEditMode = ref("0"); //1 = salaries 2 = FTE
     function addColumn(){
-        schedule.value.addColumn();  
+        props.schedule.addColumn();  
     }
     function addRow(){
-        schedule.value.addRow();
+        props.schedule.addRow();
     }
     function removeColumn(i){
         if (confirm("Are you sure you want to delete this entire column?")){
-            schedule.value.removeColumn(i);
+            props.schedule.removeColumn(i);
         }
     }
     function removeRow(i){
         if (confirm("Delete this row?")){
-            schedule.value.removeRow(i);
+            props.schedule.removeRow(i);
         }
     }
     var USDollar = new Intl.NumberFormat('en-US', {
@@ -32,29 +33,60 @@
 </script>
 <template>
     <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
-    <h1 v-else><input v-model = schedule.title></h1>
-    <h5>{{ schedule.description }}</h5>
+    <h1 v-else><b-input v-model = schedule.title /></h1>
+    <h5 v-if="currEditMode == 0">{{ schedule.description }}</h5>
+    <h5 v-else>
+        <b-field label="Schedule Description">
+            <b-input v-model = schedule.description></b-input>
+        </b-field>
+    </h5>
     <!-- <label for="radEditNone">No Edit</label><RadioButton v-model = "currEditMode" value="0" />
     <label for="radEditSalary">Edit Salaries</label><RadioButton inputID="radEditSalary" v-model = "currEditMode" value="1" />
     <label for="radEditFTE">Edit FTE</label><RadioButton inputID="radEditFTE" v-model = "currEditMode" value="2" /> -->
-    <b-radio v-model = "currEditMode" name="radNoEdit" native-value=0>View Only</b-radio>
-    <b-radio v-model = "currEditMode" name="radEditSalary" native-value=1>Edit Salaries</b-radio>
-    <b-radio v-model = "currEditMode" name="radEditFTE" native-value=2>Edit FTE</b-radio>
-    <div>FTE Count: {{ schedule.countFTE() }}</div>
-    <div v-if = "currEditMode == 0">
-        Insurance amount: {{ USDollar.format(schedule.insurance) }}
-    </div>
-    <div v-else>
-        <b-field>Insurnace Cost
-            <b-input type="text" v-model = schedule.insurance />
-        </b-field>
-    </div>
-    <div>
-        Insurance Cost: {{ USDollar.format(schedule.calcInsuranceCost()) }}
-    </div>
-    <div>Salary Cost: {{USDollar.format(schedule.getSalaryCost()) }}</div>
-    <div>Total Cost: {{ USDollar.format(schedule.getAnnualCost()) }}</div>
-    <table>
+    
+        <table class="summary">
+            <tbody>
+            <tr v-if="currEditMode == 0">
+                <td>Schedule Duration:</td>
+                <td> {{ schedule.durationInMonths }} months</td>
+            </tr>
+            <tr v-else>
+                <td>Duration in Months</td>
+                <td><b-input type="number" v-model="schedule.durationInMonths" /></td>
+                
+            </tr>
+            <tr v-if = "currEditMode == 0">
+                <td>Insurance Contribution:</td>
+                <td>{{ USDollar.format(schedule.insurance) }}</td>
+            </tr>
+            <tr v-else>
+                <td>Insurance Contribution</td>
+                <td><b-input type="text" v-model = schedule.insurance /></td>
+            </tr>
+            <tr>
+                <td>FTE Count: </td>
+                <td>{{ schedule.countFTE() }}</td>
+            </tr>
+            <tr>
+               <td>Total Insurance Cost:</td> 
+               <td>{{ USDollar.format(schedule.calcInsuranceCost()) }}</td> 
+            </tr>
+            <tr>
+                <td>Salary Cost:</td> 
+                <td>{{USDollar.format(schedule.getSalaryCost()) }}</td>
+            </tr>
+            <tr>
+                <td>Total Cost: </td>
+                <td>{{ USDollar.format(schedule.getAnnualCost()) }}</td>
+            </tr>
+        </tbody>
+        </table>
+
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="0" selected>View Only</b-radio>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="1">Edit Salaries</b-radio>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="2">Edit FTE</b-radio>
+    
+    <table class="schedule">
         <thead>
         <tr>
             <th>*</th>
@@ -67,7 +99,7 @@
             <tr v-for = "(row, index) in schedule.cells">
                 <th v-if = "currEditMode == 0">{{ schedule.rowTitles[index] }}</th>
                 <th v-else><input type="text" v-model=schedule.rowTitles[index] tabindex="2"/><b-button @click=removeRow(index)>&#x1F5D1;</b-button></th>
-                <Cellvue v-for="slot in row" :thisCell = "slot" :isFocused = "currEditMode" />
+                <Cellvue v-for="slot in row" :thisCell = "slot" :editMode = "currEditMode" />
             </tr>
             <tr v-if="currEditMode != 0">
                 <th><b-button type="is-dark" rounded @click=addRow()> + </b-button></th>
@@ -76,55 +108,81 @@
     </table>
 </template>
 <style scoped>
-    table{
-        border-collapse: collapse;
-        overflow:hidden;
+    h1{
+        font-size: 1.5em;
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
     }
-    tr:nth-child(1) th{
+    h5{
+        background-color: lightgray;
+        padding: 5px;
+    }
+    table.schedule{
+        border-collapse: collapse;
+        overflow: hidden;
+    }
+    table.schedule tr:nth-child(1) th{
         
         /* text-orientation:sideways;
         writing-mode:sideways-lr; */
-        text-align: center;
         vertical-align:bottom;
         padding-bottom: 0px;
-        padding-top: 5px;
     }
-    th{
+    table.schedule th{
         font-weight: bold;
         border: 1px solid black;
-        padding: 2px 10px;
-        width: fit-content;
-        height: fit-content;
-        text-align: center;
+        padding: 2px 2px;
+        text-align: center !important;
+        color: black;
+        width: 200px !important;
     }
-    td{
+
+    table.schedule td{
         border: 1px solid grey;
-        padding: 2px 5px;
+        padding: 1px 5px;
         position: relative;
     }
 
-    td:hover{
-        background-color: rgb(158, 106, 12);
+    table.schedule td:hover{
+        background-color: rgb(82, 77, 15);
         cursor: pointer;
         color: white;
         font-weight: bold;
     }
-    td:hover::before{
-        /*TODO: This column highlight is not working */
+    table.schedule td:hover::before{
         content: '';
         height: 2000px;
         top: -1000px;
         width: inherit;
-        background-color: yellow;
+        background-color: rgba(255, 255, 0, 0.285);
         position: absolute;
         left: 0px;
         right: 0px;
-        z-index: -1;
+        z-index: 0;
+        pointer-events: none;
 
     }
 
-    tr:hover{
-        background-color: yellow;
+    table.schedule tr:hover{
+        background-color: rgba(255, 255, 0, 0.285);;
     }
+    table.summary{
+        border: 3px inset grey;
+        padding: 5px; 
+        margin: 5px auto;
+    }
+    table.summary tr:nth-child(even){
+        background-color: rgb(227, 242, 246);
 
+    }
+    table.summary td{
+        padding: 2px 3px;
+        text-align: right;
+
+    }
+    table.summary td:nth-child(1){
+        font-weight: bold;
+    }
+    input{
+        width: 80px;
+    }
 </style>
