@@ -4,6 +4,7 @@ export default class Scenario{
     title = "blue Scenario";
     description = "Description";
     schedules = [];
+    percentAssociatedCosts = 0.0;
 
     constructor(title, description){
         this.title = title;
@@ -24,6 +25,7 @@ export default class Scenario{
         }
         let objScenario = JSON.parse(jsonScenario);
         let newScenario = new Scenario(objScenario.title, objScenario.description);
+        newScenario.percentAssociatedCosts = objScenario.percentAssociatedCosts;
         for (var i = 0; i < objScenario.schedules.length; i++){
             let sched = Schedule.fromJsonSchedule(JSON.stringify(objScenario.schedules[i]));
             if (sched != null){
@@ -46,6 +48,11 @@ export default class Scenario{
             }
         }
         return total;
+    }
+    getFullyAllocatedCost(){
+        //adds the Associated Payroll Cost to the total
+        let total = this.getTotalCost();
+        return total * (1 + this.percentAssociatedCosts/100);
     }
 
     advanceLast(newTitle, percentage, advanceFTE = true){

@@ -51,7 +51,23 @@
                 <b-input v-model = scenario.description></b-input>
             </b-field>
         </h4>
-    <h4>Total Cost of this scenario: {{ USDollar.format(scenario.getTotalCost()) }}</h4>
+        <table class="summary">
+            <tbody>
+            <tr>
+                <td>Total Cost of this scenario:</td>
+                <td> {{ USDollar.format(scenario.getTotalCost()) }}</td>
+            </tr>       
+            <tr>
+                <td>Associated Payroll Costs: </td>
+                <td v-if="editMode == false">{{ scenario.percentAssociatedCosts }}%</td>
+                <td v-else><b-input v-model="scenario.percentAssociatedCosts"></b-input> </td>
+            </tr> 
+            <tr>
+                <td>Fully Allocated scenario cost:</td>
+                <td>{{ USDollar.format(scenario.getFullyAllocatedCost()) }}</td>
+            </tr>
+        </tbody>
+        </table>
     <hr>
     <b-tabs type="is-boxed" >
         <b-tab-item v-for = "(schedule, index) in scenario.schedules" :label = schedule.title>
@@ -92,5 +108,15 @@
         background-color: lightgray;
         margin: 3px;
     }
-
+    table{
+        border: 3px inset lightgray;
+        margin: 5px auto;
+        
+    }
+    tr{
+      border: 1px solid rgb(194, 237, 240);;  
+    }
+    td{
+        padding: 2px;
+    }
 </style>
