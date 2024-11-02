@@ -12,7 +12,7 @@ export default class Schedule{
     colTitles = [];
     rowTitles = [];
     cells = [];
-    insurance = 10285;
+    insurance = 0;
     constructor(title, description = ""){
         this.title = title;
         this.description = description;
@@ -50,14 +50,15 @@ export default class Schedule{
             return;
         }
         //should check that it has the right structure. 
-        let newCal = new Schedule(temp.title);
-        newCal.description = temp.description;
-        newCal.rows = temp.rows;
-        newCal.cols = temp.cols;
-        newCal.colTitles = temp.colTitles;
-        newCal.rowTitles = temp.rowTitles;
-        newCal.cells = temp.cells;
-        return newCal;
+        let newSchedule = new Schedule(temp.title);
+        newSchedule.description = temp.description;
+        newSchedule.insurance = temp.insurance;
+        newSchedule.rows = temp.rows;
+        newSchedule.cols = temp.cols;
+        newSchedule.colTitles = temp.colTitles;
+        newSchedule.rowTitles = temp.rowTitles;
+        newSchedule.cells = temp.cells;
+        return newSchedule;
     }
     getSalaryCost(){
         var totalCost = 0;

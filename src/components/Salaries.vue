@@ -32,7 +32,7 @@
 </script>
 <template>
     <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
-    <h1 v-else><b-input v-model = schedule.title /></h1>
+    <h1 v-else><b-input size="is-large" v-model = schedule.title /></h1>
     <h5 v-if="currEditMode == 0">{{ schedule.description }}</h5>
     <h5 v-else>
         <b-field label="Schedule Description">
@@ -90,14 +90,14 @@
         <tr>
             <th>*</th>
             <th v-if = "currEditMode == 0" v-for="col in schedule.colTitles">{{ col }}</th>
-            <th v-else v-for="(col, index) in schedule.colTitles" ><input type=text v-model=schedule.colTitles[index] tabindex=1/><b-button type="is-dark" rounded @click=removeColumn(index)>&#x1F5D1</b-button></th>
+            <th v-else v-for="(col, index) in schedule.colTitles" ><input type=text v-model=schedule.colTitles[index] tabindex=2/><b-button type="is-dark" rounded @click=removeColumn(index)>&#x1F5D1</b-button></th>
             <th v-if = "currEditMode != 0">&nbsp;<b-button type="is-dark" rounded @click="addColumn()">&nbsp;+&nbsp;</b-button>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
             <tr v-for = "(row, index) in schedule.cells">
                 <th v-if = "currEditMode == 0">{{ schedule.rowTitles[index] }}</th>
-                <th v-else><input type="text" v-model=schedule.rowTitles[index] tabindex="2"/><b-button @click=removeRow(index)>&#x1F5D1;</b-button></th>
+                <th v-else><input type="text" v-model=schedule.rowTitles[index] tabindex="3"/><b-button @click=removeRow(index)>&#x1F5D1;</b-button></th>
                 <Cellvue v-for="slot in row" :thisCell = "slot" :editMode = "currEditMode" />
             </tr>
             <tr v-if="currEditMode != 0">
@@ -110,6 +110,11 @@
     h1{
         font-size: 1.5em;
         font-family:Verdana, Geneva, Tahoma, sans-serif;
+        text-align: center;
+    }
+    input{
+        border: 3px outset rgb(181, 234, 243) !important;
+        margin: 1px;
     }
     h5{
         background-color: lightgray;

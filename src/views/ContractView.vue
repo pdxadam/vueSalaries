@@ -123,8 +123,9 @@
                             <span>{{ file.name || "Upload Scenario Backup"}}</span>
                         </a>
                     </b-upload>
-                    <b-button expanded v-if = "file.name" @click="handleUpload()">Process File</b-button>
+                    
             </b-field>
+            <b-button type="is-primary" expanded v-if = "file.name" @click="handleUpload()">Process File</b-button>
             
             </div>
         </b-sidebar>
