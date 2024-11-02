@@ -1,29 +1,9 @@
 # Salaries
 
-This template should help get you started developing with Vue 3 in Vite.
+This program allows setting up salary schedules in scenarios (or contracts, or contract proposals). It will take both salaries and FTE counts at each cell in the salary schedule. It also allows taking in an insurance contribution for each employee per month. It calculates the cost of each schedule and adds them up to get a full cost for the entire scenario. 
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+# Future
+- add associated payroll cost percentage to each scenario
+- Compare two scenarios
+- Add miscellaneous costs to be considered
+- Do an insurance pool calculator (though how these are calculated varies widely from district to district)
