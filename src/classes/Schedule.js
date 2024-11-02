@@ -67,7 +67,7 @@ export default class Schedule{
                 totalCost += (cell.salary * cell.fte);
             }
         }
-        return totalCost * this.durationInMonths;
+        return totalCost * (this.durationInMonths / 12);
     }
     getAnnualCost(){
         return this.getSalaryCost() + this.calcInsuranceCost();
