@@ -107,31 +107,38 @@
                 </b-menu-list>
             </b-menu>
             <!-- <b-button @click="downloadBackup()">Download Backup</b-button> Hiding 'cause I don't the the whole set is needed -->
+            <div class="mcActions" v-if = "selectedScenario != null">
+                <h3>Selected Scenario Actions</h3> 
+                <b-button expanded type="is-success is-light"  @click="downloadBackup(true);">Download Scenario Backup</b-button>
+                <b-button type="is-danger is-light" expanded @click="deleteScenario();">Delete Selected Scenario</b-button>
+               
+            </div>
             <div class="mcActions">
-            <b-field class="file">
-                <b-upload v-model=file expanded>
-                    <a class="button is-primary is-fullwidth">
-                        <b-icon icon="upload"></b-icon>
-                        <span>{{ file.name || "Upload Scenario Backup"}}</span>
-                    </a>
-                </b-upload>
+            <h3>General Actions</h3>    
+                <b-button expanded @click="createScenario(Schedule.SeedSchedule('Starter', 17, 7), 'New Scenario')">Create Scenario</b-button>
+                <b-field class="file">
+                    <b-upload v-model=file expanded>
+                        <a class="button is-fullwidth">
+                            <b-icon icon="upload"></b-icon>
+                            <span>{{ file.name || "Upload Scenario Backup"}}</span>
+                        </a>
+                    </b-upload>
+                    <b-button expanded v-if = "file.name" @click="handleUpload()">Process File</b-button>
             </b-field>
             
-                <b-button v-if = "file.name" @click="handleUpload()">Go</b-button>
             </div>
         </b-sidebar>
     </section>
     <section>
-            <b-button v-if = "selectedScenario != null" @click="downloadBackup(true);">Download Scenario Backup</b-button>
             <ScenarioView v-if = "selectedScenario != null" :scenario = selectedScenario @createScenario = "createScenario"></ScenarioView>
 
     </section>   
-    <section>
-        <b-button v-if = "selectedScenario != null" @click="deleteScenario();">Delete this Scenario {{  selectedScenario.title }}</b-button>
-    </section>   
+   
 </template>
 <style scoped>
     .mcActions{
         margin-top: 30px;
+        border-top: 1px solid lightgrey;
+        padding: 5px 0px;
     }
 </style>

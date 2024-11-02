@@ -3,7 +3,6 @@
     import Cellvue from './Cellvue.vue';
     import { Button } from 'buefy'
     import { ref } from 'vue';
-    //TODO: Something is breaking when we add a column and then edit FTE. 
     //TODO: Is it possible to navigate the editing mode with arrow keys?
     const props = defineProps({
         schedule: Schedule,
