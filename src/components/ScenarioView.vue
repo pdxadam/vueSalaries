@@ -54,9 +54,17 @@
         <table class="summary">
             <tbody>
             <tr>
-                <td>Total Cost of this scenario:</td>
-                <td> {{ USDollar.format(scenario.getTotalCost()) }}</td>
-            </tr>       
+                <td>Insurance Cost of this scenario:</td>
+                <td> {{ USDollar.format(scenario.getInsuranceCosts()) }}</td>
+            </tr>   
+            <tr>
+                <td>Salary Cost of this scenario:</td>
+                <td> {{ USDollar.format(scenario.getSalaryCosts()) }}</td>
+            </tr>   
+            <tr>
+                <td>Insurance + Salary Costs:</td>
+                <td>{{  USDollar.format(scenario.getTotalCost()) }}</td>
+            </tr>    
             <tr>
                 <td>Associated Payroll Costs: </td>
                 <td v-if="editMode == false">{{ scenario.percentAssociatedCosts }}%</td>
