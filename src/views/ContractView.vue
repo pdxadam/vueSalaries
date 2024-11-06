@@ -6,7 +6,6 @@
     import ScenarioList from '@/components/ScenarioList.vue';
     import ScenarioView from '@/components/ScenarioView.vue';
     import CompareContracts from '@/views/CompareContracts.vue';
-//TODO: Add a 'Delete Scenario' option.  
 //TODO: add an insurnace pool calculator (Riverdale Only, I guess)
     
     const scenarios = ref([]);

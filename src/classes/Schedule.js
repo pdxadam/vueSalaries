@@ -1,7 +1,6 @@
 import Cell from './Cell.js';
 export default class Schedule{
     //TODO: Include an 'add-on costs' section
-    //TODO: Add an 'associated payroll costs' feature -- is that by schedule or by scenario? 
     //TODO: Add a feature to consider inflation
 
     title = "New Schedule";
