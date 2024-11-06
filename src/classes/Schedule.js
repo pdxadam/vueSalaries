@@ -13,6 +13,7 @@ export default class Schedule{
     rowTitles = [];
     cells = [];
     insurance = 0;
+    
     constructor(title, description = ""){
         this.title = title;
         this.description = description;

@@ -5,7 +5,10 @@
         editMode: String,
     })
     
-
+    var USDollar = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+});
 </script>
 <template>
     <td v-if = "editMode == 1">
@@ -14,8 +17,8 @@
     <td v-else-if = "editMode == 2">
         <input type="text" tabindex="1" value=""  v-model = thisCell.fte >
     </td>
-    <td v-else tabindex = "0">        
-        <span class='salary'>${{ thisCell.salary }}</span>
+    <td v-else tabindex = "0" class="displayCell">        
+        <span class='salary'>{{ USDollar.format(thisCell.salary) }}</span>
         <span class='fte'>{{  thisCell.fte }} fte</span>
     </td>
 
@@ -25,11 +28,14 @@
     .salary{
         font-size: 0.8em;
     }
+    .displayCell{
+        text-align: right;
+    }
     
     .fte{
         position: absolute;
         font-size: 0.5em;
-        right: 0px;
+        left: 2px;
         bottom: 0px;
         color: gray;
     }

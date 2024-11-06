@@ -5,6 +5,7 @@
     import Salaries from './Salaries.vue';
     import modal_newScenario from './modal_newScenario.vue';
     import { ref } from 'vue';
+    import ScenarioSummary from '@/components/ScenarioSummary.vue'
     
     const emit = defineEmits(['createScenario']);
     const props = defineProps({
@@ -36,46 +37,11 @@
 
 </script>
 <template>
-    <section>
-        <b-button size="is-small" @click = "editMode = !editMode">{{ editMode?"&#x1F4BE":"&#x270E" }}</b-button>
-        <h1 v-if = "editMode == false">Scenario: {{ scenario.title }}</h1>
-        <h1 v-else>
-            <b-field label="Scenario Title" type="is-info">
-                <b-input type="text" v-model = scenario.title></b-input>
-            </b-field>
-        </h1>
+    <b-button size="is-small" @click = "editMode = !editMode">{{ editMode?"&#x1F4BE":"&#x270E" }}</b-button>
         
-        <h4 v-if = "editMode == false">{{ scenario.description }}</h4>
-        <h4 v-else>
-            <b-field label="Scenario Description">
-                <b-input v-model = scenario.description></b-input>
-            </b-field>
-        </h4>
-        <table class="summary">
-            <tbody>
-            <tr>
-                <td>Insurance Cost of this scenario:</td>
-                <td> {{ USDollar.format(scenario.getInsuranceCosts()) }}</td>
-            </tr>   
-            <tr>
-                <td>Salary Cost of this scenario:</td>
-                <td> {{ USDollar.format(scenario.getSalaryCosts()) }}</td>
-            </tr>   
-            <tr>
-                <td>Insurance + Salary Costs:</td>
-                <td>{{  USDollar.format(scenario.getTotalCost()) }}</td>
-            </tr>    
-            <tr>
-                <td>Associated Payroll Costs: </td>
-                <td v-if="editMode == false">{{ scenario.percentAssociatedCosts }}%</td>
-                <td v-else><b-input v-model="scenario.percentAssociatedCosts"></b-input> </td>
-            </tr> 
-            <tr>
-                <td>Fully Allocated scenario cost:</td>
-                <td>{{ USDollar.format(scenario.getFullyAllocatedCost()) }}</td>
-            </tr>
-        </tbody>
-        </table>
+    <section>
+        
+        <ScenarioSummary :scenario = scenario :editMode = editMode />
     <hr>
     <b-tabs type="is-boxed" >
         <b-tab-item v-for = "(schedule, index) in scenario.schedules" :label = schedule.title>
@@ -127,4 +93,5 @@
     td{
         padding: 2px;
     }
+
 </style>
