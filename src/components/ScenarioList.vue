@@ -16,6 +16,10 @@
         n.schedules.push(newSchedule);
         props.scenarios.push(n);
     }
+    function duplicate(){
+        props.scenarios.push(Scenario.Duplicate(selectedScenario));
+        
+    }
     function setSelectedScenario(scenario, index){
 
         selectedScenario.value = scenario;
@@ -88,8 +92,10 @@
             <!-- <b-button @click="downloadBackup()">Download Backup</b-button> Hiding 'cause I don't the the whole set is needed -->
             <div class="mcActions" v-if = "selectedScenario != null">
                 <h3>Selected Scenario Actions</h3> 
+                <b-button expanded @click="duplicate()">Duplicate</b-button>
                 <b-button expanded type="is-success is-light"  @click="downloadBackup(true);">Download Scenario Backup</b-button>
                 <b-button type="is-danger is-light" expanded @click="deleteScenario();">Delete Selected Scenario</b-button>
+
                
             </div>
             <div class="mcActions">

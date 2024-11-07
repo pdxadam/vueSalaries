@@ -165,6 +165,17 @@ export default class Schedule{
         }
         return newSchedule;
     }
-
+    adjustSalaries(percentage){
+    //go through every cell and add the percentage.
+    //TODO: test this adjust Salaries function. 
+    //TODO: use this function in the copySchedule piece.
+    
+        for (var row = 0; row < this.cells.length; row++){
+            for (var col = 0; col < this.cells[row].length; col++){
+                let newSalary = this.cells[row][col].salary * (1 + percentage/100);
+                this.cells[row][col].salary = Math.round(newSalary * 100)/100;
+            }
+        }
+    }
 
 }

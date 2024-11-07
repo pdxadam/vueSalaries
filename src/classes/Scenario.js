@@ -19,6 +19,13 @@ export default class Scenario{
         scenario.schedules.push(newSchedule);
         return scenario;
     }
+    static Duplicate(scenario){
+        let jsonScenario = JSON.stringify(scenario);
+        let newScenario = this.CreateFromJson(jsonScenario);
+        newScenario.title = newScenario.title + "(copy)";
+        return newScenario;
+        //TODO: test the copy function;
+    }
     static CreateFromJson(jsonScenario){
         if (jsonScenario == null || jsonScenario == ""){
             return;
