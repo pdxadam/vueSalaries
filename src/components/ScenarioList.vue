@@ -17,7 +17,7 @@
         props.scenarios.push(n);
     }
     function duplicate(){
-        props.scenarios.push(Scenario.Duplicate(selectedScenario));
+        props.scenarios.push(Scenario.Duplicate(selectedScenario.value));
         
     }
     function setSelectedScenario(scenario, index){
