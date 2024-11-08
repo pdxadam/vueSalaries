@@ -8,6 +8,7 @@
         schedule: Schedule,
     });
     const inEditMode = ref(false);
+    const adjustPercentAmt = ref(0);
     const currEditMode = ref("0"); //1 = salaries 2 = FTE
     function addColumn(){
         props.schedule.addColumn();  
@@ -25,17 +26,18 @@
             props.schedule.removeRow(i);
         }
     }
+    function adjustPercentage(){
+        props.schedule.adjustSalaries(adjustPercentAmt.value)
+    }
     var USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
 </script>
 <template>
-    <!-- TODO: incorporate a button and input to advance the schedule without copying -->
-    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="0" selected>View Only</b-radio>
-    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="1">Edit Salaries</b-radio>
-    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="2">Edit FTE</b-radio>
-    <!-- TODO: check the layout of these radio buttons -->
+    <b-field label="Percent to adjust by">
+        <b-input v-model="adjustPercentAmt"></b-input><b-button @click="adjustPercentage()" label="adjust salaries" />
+    </b-field>
     <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
     <h1 v-else><b-input size="is-large" v-model = schedule.title /></h1>
     <h5 v-if="currEditMode == 0">{{ schedule.description }}</h5>
@@ -87,6 +89,10 @@
         </table>
 
   
+    <!-- TODO: incorporate a button and input to advance the schedule without copying -->
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="0" selected>View Only</b-radio>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="1">Edit Salaries</b-radio>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="2">Edit FTE</b-radio>
     
     <table class="schedule">
         <thead>

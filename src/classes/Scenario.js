@@ -24,7 +24,6 @@ export default class Scenario{
         let copiedScenario = Scenario.CreateFromJson(stringedScenario);
         copiedScenario.title = copiedScenario.title + "(copy)";
         return copiedScenario;
-        //TODO: test the copy function;
     }
     static CreateFromJson(jsonScenario){
         if (jsonScenario == null || jsonScenario == ""){
