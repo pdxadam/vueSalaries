@@ -113,7 +113,7 @@
             }
 
         }
-        var fileName = 'scenarioDownload.xlsx';
+        var fileName = selectedScenario.value.title + ".xlsx";
         console.log(fileName);
         
         workbook.xlsx.writeBuffer().then(buffer => {
