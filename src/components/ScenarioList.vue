@@ -82,17 +82,27 @@
 
         }]
         const summarySheet = workbook.addWorksheet("Summary");
-        summarySheet.addRow(["Topic", "Value"]);
+        summarySheet.addRow(["Title:", selectedScenario.value.title]);
+        summarySheet.addRow(["Description:", selectedScenario.value.description]);
+        summarySheet.addRow();
+
+        summarySheet.addRow(["Summary Information"]);
         summarySheet.addRow(["Insurance Cost", selectedScenario.value.getInsuranceCosts()]);
         summarySheet.addRow(["Salary Cost", selectedScenario.value.getSalaryCosts()]);
         summarySheet.addRow(["Insurance + Salary Cost", selectedScenario.value.getSalaryCosts()]);
-        summarySheet.addRow(["Associated Payroll Cost", selectedScenario.value.percentAssociatedCosts]);
+        summarySheet.addRow(["Associated Payroll Cost (Percent)", selectedScenario.value.percentAssociatedCosts]);
         summarySheet.addRow(["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()]);
         
         for (let schedule of selectedScenario.value.schedules){
             const s = workbook.addWorksheet(schedule.title);
+            //title/summary info
+            s.addRow(["schedule title: ", schedule.title]);
+            s.addRow(["Description:", schedule.description]);
+            s.addRow(["Insurance Contribution", schedule.insurance]);
+            s.addRow();
+            
             //start by handling the salaries
-        
+            
             s.addRow(["Salaries"].concat(schedule.colTitles));
             for (var i = 0; i < schedule.cells.length; i++){
                 let newRow = [schedule.rowTitles[i]];
@@ -105,6 +115,7 @@
             s.addRow();
             s.addRow(["FTE"].concat(schedule.colTitles));
             for (var i = 0; i < schedule.cells.length; i++){
+                
                 let newRow = [schedule.rowTitles[i]];
                 for (let cell of schedule.cells[i]){
                     newRow.push(parseFloat(cell.fte));
