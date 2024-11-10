@@ -35,9 +35,9 @@
 });
 </script>
 <template>
-    <b-field label="Percent to adjust by">
+    <!-- <b-field label="Percent to adjust by">
         <b-input v-model="adjustPercentAmt"></b-input><b-button @click="adjustPercentage()" label="adjust salaries" />
-    </b-field>
+    </b-field> -->
     <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
     <h1 v-else><b-input size="is-large" v-model = schedule.title /></h1>
     <h5 v-if="currEditMode == 0">{{ schedule.description }}</h5>
