@@ -1,4 +1,6 @@
 import Cell from './Cell.js';
+import * as ExcelJS from 'exceljs';
+
 export default class Schedule{
     //TODO: Include an 'add-on costs' section
     //TODO: Add a feature to consider inflation
@@ -37,7 +39,7 @@ export default class Schedule{
         }
         return s;
     }
-
+    
     static fromJsonSchedule(json){
         if (json == null || json == ""){
             return null; //not a good structure
@@ -75,6 +77,7 @@ export default class Schedule{
     setInsurance(monthlyContribution){
         this.insurance = monthlyContribution;
     }
+
     addColumn(){
         this.cols++;
         this.colTitles.push("New");

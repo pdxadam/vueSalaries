@@ -1,4 +1,5 @@
 import Schedule from './Schedule.js'
+import * as ExcelJS from 'exceljs'
 export default class Scenario{
     
     title = "blue Scenario";
@@ -77,5 +78,28 @@ export default class Scenario{
         let newSchedule = this.schedules.at(-1).copySchedule(newTitle, percentage, advanceFTE);
         this.schedules.push(newSchedule);   
 
+    }
+    async exportToExcel(){
+        const workbook = new ExcelJS.Workbook();
+        workbook.creator = "McLainonline.com";
+        workbook.lastModifiedBy = "mclainonline.com";
+        workbook.created = new Date();
+        workbook.modified = new Date();
+
+        workbook.properties.date1904 = true;
+        workbook.calcProperties.fullCalcOnLoad = true;
+        workbook.views = [
+            { x:0, y: 0, width: 10000, height: 20000, firstSheet: 0, activeTab: 1, visibility: 'visible'
+
+        }]
+        const summarySheet = workbook.addWorksheet("Summary");
+        summarySheet.addRow(["Topci", "Value"]);
+        summarySheet.addRow(["Insurance Cost", this.getInsuranceCosts()]);
+        summarySheet.addRow(["Salary Cost", this.getSalaryCosts()]);
+        summarySheet.addRow(["Insurance + Salary Cost", this.getSalaryCosts()]);
+        summarySheet.addRow(["Associated Payroll Cost", this.percentAssociatedCosts]);
+        summarySheet.addRow(["Fully Allocated Cost", this.getFullyAllocatedCost()]);
+        return workbook;
+        
     }
 }
