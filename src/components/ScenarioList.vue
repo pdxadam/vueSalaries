@@ -100,9 +100,13 @@
             s.addRow(["Description:", schedule.description]);
             s.addRow(["Insurance Contribution", schedule.insurance]);
             s.addRow();
-            
-            //start by handling the salaries
-            
+            s.addRow(["Additional Costs:"])
+            s.addRow(["title", "Amount", "Times/Year", "Per FTE?"]);
+            for (let cost of schedule.additionalCosts){
+                s.addRow([cost.title, cost.amount, cost.timesPerYear, cost.perMember])
+            }
+            //handling the salaries
+            s.addRow();
             s.addRow(["Salaries"].concat(schedule.colTitles));
             for (var i = 0; i < schedule.cells.length; i++){
                 let newRow = [schedule.rowTitles[i]];
