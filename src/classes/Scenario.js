@@ -56,21 +56,26 @@ export default class Scenario{
         }
         return insuranceCosts;
     }
+    getAdditionalCosts(){
+        var total = 0;
+        for(let s of this.schedules){
+            total += s.calculateAdditionalCosts();
+        }
+        return total;
+    }
     getTotalCost(){
         //adds up the total cost of the shedules in this scenario
-       return this.getSalaryCosts() + this.getInsuranceCosts();
+       return this.getSalaryCosts() + this.getInsuranceCosts() + this.getAdditionalCosts();
     }
     getFullyAllocatedCost(){
         //adds the Associated Payroll Cost to the total
         //OOh, we probably don't count the associated payroll on top of insurance. 
         var salaryTotal = this.getSalaryCosts();
         var insuranceTotal = this.getInsuranceCosts();  
-        console.log(salaryTotal);
-        console.log(insuranceTotal);      
+        var additionalCost = this.getAdditionalCosts();    
         //apply the allocated costs
         salaryTotal *= (1 + this.percentAssociatedCosts/100);
-        console.log(salaryTotal);
-        return salaryTotal + insuranceTotal;
+        return salaryTotal + insuranceTotal + additionalCost;
     }
 
     advanceLast(newTitle, percentage, advanceFTE = true){

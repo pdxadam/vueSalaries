@@ -2,7 +2,10 @@ import Cell from './Cell.js';
 import * as ExcelJS from 'exceljs';
 
 export default class Schedule{
-    //TODO: Include an 'add-on costs' section
+    //TODO: apply additionalCosts to interface: add/subtract/display detail
+    //That display for additionalCost could be a collapsible section of the summary table?
+    //Insurance then could be just an additional cost....
+    //We should change perMember to perFTE. perMember woudld require additional data.
     //TODO: Add a feature to consider inflation
 
     title = "New Schedule";
@@ -13,6 +16,7 @@ export default class Schedule{
     colTitles = [];
     rowTitles = [];
     cells = [];
+    additionalCosts = [];
     insurance = 0;
     
     constructor(title, description = ""){
@@ -60,6 +64,12 @@ export default class Schedule{
         newSchedule.colTitles = temp.colTitles;
         newSchedule.rowTitles = temp.rowTitles;
         newSchedule.cells = temp.cells;
+        if (temp.additionalCosts){
+            newSchedule.additionalCosts = temp.additionalCosts;
+        }
+        else{
+            newSchedule.additionalCosts = [];
+        }
         return newSchedule;
     }
     getSalaryCost(){
@@ -181,5 +191,21 @@ export default class Schedule{
             }
         }
     }
-
+    addAdditionalCost(title, amount, timesPerYear = 1, perMember = false){
+        //adds an additional lump costs entry to this schedule. Assumes it is an annual cost (1x per year)
+        //e.g. 
+        this.additionalCosts.push({"title":title, "amount":amount, "timesPerYear": timesPerYear, "perMember": perMember});
+    }
+    calculateAdditionalCosts(){
+        let total = 0;
+        
+        for (let cost of this.additionalCosts){
+            let thisCost = (cost.amount * cost.timesPerYear);
+            if (cost.perMember){
+                thisCost *= this.countFTE();
+            }
+            total += thisCost;
+        }
+        return total;
+    }
 }

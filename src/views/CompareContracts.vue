@@ -47,6 +47,11 @@
                     <td>{{  USDollar.format(comparisonList[0].getSalaryCosts() - comparisonList[1].getSalaryCosts()) }}</td> 
                 </tr>
                 <tr>
+                    <td>&#x0394; Additional Costs</td>
+                    <td>{{  USDollar.format(comparisonList[0].getAdditionalCosts() - comparisonList[1].getAdditionalCosts()) }}</td> 
+                
+                </tr>
+                <tr>
                     <td>&#x0394; Insurance + Salary cost </td>
                     <td>{{  USDollar.format(comparisonList[0].getTotalCost() - comparisonList[1].getTotalCost()) }}</td> 
                 </tr>

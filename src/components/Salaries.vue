@@ -2,6 +2,7 @@
     import Schedule from '../classes/Schedule.js';
     import Cellvue from './Cellvue.vue';
     import { Button } from 'buefy'
+    import addCosts from './addCosts.vue';
     import { ref } from 'vue';
     //TODO: Is it possible to navigate the editing mode with arrow keys?
     const props = defineProps({
@@ -10,6 +11,9 @@
     const inEditMode = ref(false);
     const adjustPercentAmt = ref(0);
     const currEditMode = ref("0"); //1 = salaries 2 = FTE
+    const summaryOpen = ref(true);
+    const addCostsOpen = ref(false);
+    const detailOpen = ref(false);
     function addColumn(){
         props.schedule.addColumn();  
     }
@@ -40,7 +44,12 @@
     </b-field> -->
     <h1 v-if="currEditMode == 0">{{  schedule.title }}</h1>
     <h1 v-else><b-input size="is-large" v-model = schedule.title /></h1>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="0" selected>View Only</b-radio>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="1">Edit Salaries</b-radio>
+    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="2">Edit FTE</b-radio>
+ 
     <h5 v-if="currEditMode == 0">{{ schedule.description }}</h5>
+    
     <h5 v-else>
         <b-field label="Schedule Description">
             <b-input v-model = schedule.description></b-input>
@@ -49,7 +58,19 @@
     <!-- <label for="radEditNone">No Edit</label><RadioButton v-model = "currEditMode" value="0" />
     <label for="radEditSalary">Edit Salaries</label><RadioButton inputID="radEditSalary" v-model = "currEditMode" value="1" />
     <label for="radEditFTE">Edit FTE</label><RadioButton inputID="radEditFTE" v-model = "currEditMode" value="2" /> -->
-    
+    <b-collapse aria-id="Schedule Summary" class="panel" animation="slide" v-model="summaryOpen">
+        <template #trigger>
+            <div class="panel-heading" role="button" :aria-expanded = "isOpen">
+                <h2>                    
+                    Summary
+                    <span class="myIcon">                
+                        <b-icon
+                           :icon="summaryOpen ? 'chevron-down' : 'chevron-right'">
+                        </b-icon>
+                    </span>   
+                </h2>
+            </div>
+        </template>
         <table class="summary">
             <tbody>
             <tr v-if="currEditMode == 0">
@@ -70,6 +91,10 @@
                 <td><b-input type="text" v-model = schedule.insurance /></td>
             </tr>
             <tr>
+                <td>Additional Costs:</td>
+                <td>{{  USDollar.format(schedule.calculateAdditionalCosts()) }}</td>
+            </tr>
+            <tr>
                 <td>FTE Count: </td>
                 <td>{{ schedule.countFTE() }}</td>
             </tr>
@@ -87,33 +112,58 @@
             </tr>
         </tbody>
         </table>
+    </b-collapse>
 
   
     <!-- TODO: incorporate a button and input to advance the schedule without copying -->
-    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="0" selected>View Only</b-radio>
-    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="1">Edit Salaries</b-radio>
-    <b-radio v-model = "currEditMode" :name='"EditMode" + schedule.title' native-value="2">Edit FTE</b-radio>
-    
-    <table class="schedule">
-        <thead>
-        <tr>
-            <th>*</th>
-            <th v-if = "currEditMode == 0" v-for="col in schedule.colTitles">{{ col }}</th>
-            <th v-else v-for="(col, index) in schedule.colTitles" ><input type=text v-model=schedule.colTitles[index] tabindex=2/><b-button type="is-dark" rounded @click=removeColumn(index)>&#x1F5D1</b-button></th>
-            <th v-if = "currEditMode != 0">&nbsp;<b-button type="is-dark" rounded @click="addColumn()">&nbsp;+&nbsp;</b-button>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr v-for = "(row, index) in schedule.cells">
-                <th v-if = "currEditMode == 0">{{ schedule.rowTitles[index] }}</th>
-                <th v-else><input type="text" v-model=schedule.rowTitles[index] tabindex="3"/><b-button @click=removeRow(index)>&#x1F5D1;</b-button></th>
-                <Cellvue v-for="slot in row" :thisCell = "slot" :editMode = "currEditMode" />
+  
+    <b-collapse aria-id="Additional Costs" class="panel" animation="slide" v-model="addCostsOpen">
+        <template #trigger>
+            <div class="panel-heading" role="button" :aria-expanded = "isOpen">
+                <h2>Additional Costs <span class="myIcon">                
+                        <b-icon
+                           :icon="addCostsOpen ? 'chevron-down' : 'chevron-right'">
+                        </b-icon>
+                    </span>   
+                </h2>
+            </div>
+        </template>
+    <addCosts :addCosts = schedule.additionalCosts />
+    </b-collapse>
+
+    <b-collapse aria-id="Salary Schedule" class="panel" animation="slide" v-model="detailOpen">
+        <template #trigger>
+            <div class="panel-heading" role="button" :aria-expanded = "isOpen">
+                <h2>Salary Schedule
+                    <span class="myIcon">                
+                        <b-icon
+                           :icon="detailOpen ? 'chevron-down' : 'chevron-right'">
+                        </b-icon>
+                    </span>   
+                </h2>
+            </div>
+        </template>
+        <table class="schedule">
+            <thead>
+            <tr>
+                <th>*</th>
+                <th v-if = "currEditMode == 0" v-for="col in schedule.colTitles">{{ col }}</th>
+                <th v-else v-for="(col, index) in schedule.colTitles" ><input type=text v-model=schedule.colTitles[index] tabindex=2/><b-button type="is-dark" rounded @click=removeColumn(index)>&#x1F5D1</b-button></th>
+                <th v-if = "currEditMode != 0">&nbsp;<b-button type="is-dark" rounded @click="addColumn()">&nbsp;+&nbsp;</b-button>&nbsp;</th>
             </tr>
-            <tr v-if="currEditMode != 0">
-                <th><b-button type="is-dark" rounded @click=addRow()> + </b-button></th>
-            </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <tr v-for = "(row, index) in schedule.cells">
+                    <th v-if = "currEditMode == 0">{{ schedule.rowTitles[index] }}</th>
+                    <th v-else><input type="text" v-model=schedule.rowTitles[index] tabindex="3"/><b-button @click=removeRow(index)>&#x1F5D1;</b-button></th>
+                    <Cellvue v-for="slot in row" :thisCell = "slot" :editMode = "currEditMode" />
+                </tr>
+                <tr v-if="currEditMode != 0">
+                    <th><b-button type="is-dark" rounded @click=addRow()> + </b-button></th>
+                </tr>
+            </tbody>
+        </table>
+    </b-collapse>
 </template>
 <style scoped>
     h1{
@@ -197,5 +247,12 @@
     }
     input{
         width: 80px;
+    }
+    .panel-heading{
+        padding-left: 50px;
+    }
+    .panel-heading .myIcon{
+        position: absolute;
+        left: 1em;
     }
 </style>
