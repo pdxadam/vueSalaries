@@ -16,7 +16,7 @@ export default class Scenario{
         //copies the schedule and creates a scenario with it a the first schedule in the array.
 
         let scenario = new Scenario(scenarioTitle, description);
-        let newSchedule = Schedule.fromJson(JSON.stringify(schedule));
+        let newSchedule = Schedule.fromJsonSchedule(JSON.stringify(schedule));
         scenario.schedules.push(newSchedule);
         return scenario;
     }

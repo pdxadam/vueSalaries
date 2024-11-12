@@ -24,13 +24,11 @@
         //if we're just adding it to this scenario, we push it upwards
 
         if (createScenario.value){
-            alert("Create Scenario");
             emit('createScenario', newSchedule, newScenarioTitle.value);
             clearForm();
             emit('close');
         }
         else{
-            alert("create schedule");
             emit('copySchedule', newSchedule);
             clearForm();
             emit('close');

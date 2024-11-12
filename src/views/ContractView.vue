@@ -20,6 +20,11 @@
     function selectScenario(s){
         selectedScenario.value = s
     }
+    function createScenario(newSchedule, newTitle, newDescription = ""){
+
+        const newScenario = Scenario.CreateFromSchedule(newTitle, newDescription, newSchedule);
+        scenarios.value.push(newScenario);
+    }
 
     
     
