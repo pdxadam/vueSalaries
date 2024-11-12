@@ -88,8 +88,9 @@
 
         summarySheet.addRow(["Summary Information"]);
         summarySheet.addRow(["Insurance Cost", selectedScenario.value.getInsuranceCosts()]);
+        summarySheet.addRow(["Additional Costs", selectedScenario.value.getAdditionalCosts()]);
         summarySheet.addRow(["Salary Cost", selectedScenario.value.getSalaryCosts()]);
-        summarySheet.addRow(["Insurance + Salary Cost", selectedScenario.value.getSalaryCosts()]);
+        summarySheet.addRow(["Insurance + Add'l + Salary Cost", selectedScenario.value.getTotalCost()]);
         summarySheet.addRow(["Associated Payroll Cost (Percent)", selectedScenario.value.percentAssociatedCosts]);
         summarySheet.addRow(["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()]);
         
