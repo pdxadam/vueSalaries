@@ -147,7 +147,7 @@
             selectedIndex.value = null;
         }
     }
-//TODO: STYLING FOR ScenarioList AND ScenarioSummary
+
 </script>
 <template>
     <section class="sidebar-layout">

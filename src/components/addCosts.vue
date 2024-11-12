@@ -31,10 +31,7 @@
         perFTE.value = temp.perMember;
 
     }
-    //TODO: add the new entry row to the table below.
-    //TODO: style that table.
-    //TODO: wire up the new entry action
-    //TODO: apply it to the salary vue. 
+
 </script>
 <template>
     <table>

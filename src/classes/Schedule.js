@@ -2,9 +2,7 @@ import Cell from './Cell.js';
 import * as ExcelJS from 'exceljs';
 
 export default class Schedule{
-    //TODO: apply additionalCosts to interface: add/subtract/display detail
-    //That display for additionalCost could be a collapsible section of the summary table?
-    //Insurance then could be just an additional cost....
+
     //We should change perMember to perFTE. perMember woudld require additional data.
     //TODO: Add a feature to consider inflation
 
@@ -179,9 +177,8 @@ export default class Schedule{
         return newSchedule;
     }
     adjustSalaries(percentage){
+        //I am currentlye not using this one.
     //go through every cell and add the percentage.
-    //TODO: test this adjust Salaries function. 
-    //TODO: use this function in the copySchedule piece.
         
         for (var row = 0; row < this.cells.length; row++){
             for (var col = 0; col < this.cells[row].length; col++){

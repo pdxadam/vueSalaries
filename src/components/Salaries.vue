@@ -115,7 +115,7 @@
     </b-collapse>
 
   
-    <!-- TODO: incorporate a button and input to advance the schedule without copying -->
+
   
     <b-collapse aria-id="Additional Costs" class="panel" animation="slide" v-model="addCostsOpen">
         <template #trigger>
