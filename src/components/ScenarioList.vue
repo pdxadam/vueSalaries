@@ -1,5 +1,7 @@
 <script setup>
     import { ref } from 'vue'
+    import * as ExcelJS from 'exceljs'
+    import { saveAs } from 'file-saver'
     import Scenario from '@/classes/Scenario.js'
     import Schedule from '@/classes/Schedule.js'
     
@@ -65,6 +67,79 @@
         }
         downloadFile(jsonScenarios, filename);
     }
+    function downloadExcel(){
+        console.log("gotcha!");
+        const workbook = new ExcelJS.Workbook();
+        workbook.creator = "McLainonline.com";
+        workbook.lastModifiedBy = "mclainonline.com";
+        workbook.created = new Date();
+        workbook.modified = new Date();
+
+        workbook.properties.date1904 = true;
+        workbook.calcProperties.fullCalcOnLoad = true;
+        workbook.views = [
+            { x:0, y: 0, width: 10000, height: 20000, firstSheet: 0, activeTab: 1, visibility: 'visible'
+
+        }]
+        const summarySheet = workbook.addWorksheet("Summary");
+        summarySheet.addRow(["Title:", selectedScenario.value.title]);
+        summarySheet.addRow(["Description:", selectedScenario.value.description]);
+        summarySheet.addRow();
+
+        summarySheet.addRow(["Summary Information"]);
+        summarySheet.addRow(["Insurance Cost", selectedScenario.value.getInsuranceCosts()]);
+        summarySheet.addRow(["Salary Cost", selectedScenario.value.getSalaryCosts()]);
+        summarySheet.addRow(["Insurance + Salary Cost", selectedScenario.value.getSalaryCosts()]);
+        summarySheet.addRow(["Associated Payroll Cost (Percent)", selectedScenario.value.percentAssociatedCosts]);
+        summarySheet.addRow(["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()]);
+        
+        for (let schedule of selectedScenario.value.schedules){
+            const s = workbook.addWorksheet(schedule.title);
+            //title/summary info
+            s.addRow(["schedule title: ", schedule.title]);
+            s.addRow(["Description:", schedule.description]);
+            s.addRow(["Insurance Contribution", schedule.insurance]);
+            s.addRow();
+            s.addRow(["Additional Costs:"])
+            s.addRow(["title", "Amount", "Times/Year", "Per FTE?"]);
+            for (let cost of schedule.additionalCosts){
+                s.addRow([cost.title, cost.amount, cost.timesPerYear, cost.perMember])
+            }
+            //handling the salaries
+            s.addRow();
+            s.addRow(["Salaries"].concat(schedule.colTitles));
+            for (var i = 0; i < schedule.cells.length; i++){
+                let newRow = [schedule.rowTitles[i]];
+                for (let cell of schedule.cells[i]){
+                    newRow.push(parseFloat(cell.salary));
+                }
+                s.addRow(newRow);
+            }
+            s.addRow();
+            s.addRow();
+            s.addRow(["FTE"].concat(schedule.colTitles));
+            for (var i = 0; i < schedule.cells.length; i++){
+                
+                let newRow = [schedule.rowTitles[i]];
+                for (let cell of schedule.cells[i]){
+                    newRow.push(parseFloat(cell.fte));
+                }
+                s.addRow(newRow);
+            }
+
+        }
+        var fileName = selectedScenario.value.title + ".xlsx";
+        console.log(fileName);
+        
+        workbook.xlsx.writeBuffer().then(buffer => {
+            const blob = new Blob([buffer],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    
+            saveAs(blob, fileName);
+            console.log("done");
+        });
+    
+        
+    }
     function deleteScenario(){
         if (confirm("Are you sure you want to delete this scenario? " + selectedScenario.value.title + "\nThis can't be undone, but you can download a backup first, if you want")){
             props.scenarios.splice(selectedIndex.value, 1);
@@ -72,7 +147,7 @@
             selectedIndex.value = null;
         }
     }
-//TODO: STYLING FOR ScenarioList AND ScenarioSummary
+
 </script>
 <template>
     <section class="sidebar-layout">
@@ -93,6 +168,7 @@
             <div class="mcActions" v-if = "selectedScenario != null">
                 <h3>Selected Scenario Actions</h3> 
                 <b-button expanded @click="duplicate()">Duplicate</b-button>
+                <b-button expanded @click="downloadExcel()">Export Excel</b-button>
                 <b-button expanded type="is-success is-light"  @click="downloadBackup(true);">Download Scenario Backup</b-button>
                 <b-button type="is-danger is-light" expanded @click="deleteScenario();">Delete Selected Scenario</b-button>
 

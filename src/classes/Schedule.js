@@ -1,6 +1,9 @@
 import Cell from './Cell.js';
+import * as ExcelJS from 'exceljs';
+
 export default class Schedule{
-    //TODO: Include an 'add-on costs' section
+
+    //We should change perMember to perFTE. perMember woudld require additional data.
     //TODO: Add a feature to consider inflation
 
     title = "New Schedule";
@@ -11,6 +14,7 @@ export default class Schedule{
     colTitles = [];
     rowTitles = [];
     cells = [];
+    additionalCosts = [];
     insurance = 0;
     
     constructor(title, description = ""){
@@ -37,7 +41,7 @@ export default class Schedule{
         }
         return s;
     }
-
+    
     static fromJsonSchedule(json){
         if (json == null || json == ""){
             return null; //not a good structure
@@ -58,6 +62,12 @@ export default class Schedule{
         newSchedule.colTitles = temp.colTitles;
         newSchedule.rowTitles = temp.rowTitles;
         newSchedule.cells = temp.cells;
+        if (temp.additionalCosts){
+            newSchedule.additionalCosts = temp.additionalCosts;
+        }
+        else{
+            newSchedule.additionalCosts = [];
+        }
         return newSchedule;
     }
     getSalaryCost(){
@@ -75,6 +85,7 @@ export default class Schedule{
     setInsurance(monthlyContribution){
         this.insurance = monthlyContribution;
     }
+
     addColumn(){
         this.cols++;
         this.colTitles.push("New");
@@ -166,9 +177,8 @@ export default class Schedule{
         return newSchedule;
     }
     adjustSalaries(percentage){
+        //I am currentlye not using this one.
     //go through every cell and add the percentage.
-    //TODO: test this adjust Salaries function. 
-    //TODO: use this function in the copySchedule piece.
         
         for (var row = 0; row < this.cells.length; row++){
             for (var col = 0; col < this.cells[row].length; col++){
@@ -178,5 +188,21 @@ export default class Schedule{
             }
         }
     }
-
+    addAdditionalCost(title, amount, timesPerYear = 1, perMember = false){
+        //adds an additional lump costs entry to this schedule. Assumes it is an annual cost (1x per year)
+        //e.g. 
+        this.additionalCosts.push({"title":title, "amount":amount, "timesPerYear": timesPerYear, "perMember": perMember});
+    }
+    calculateAdditionalCosts(){
+        let total = 0;
+        
+        for (let cost of this.additionalCosts){
+            let thisCost = (cost.amount * cost.timesPerYear);
+            if (cost.perMember){
+                thisCost *= this.countFTE();
+            }
+            total += thisCost;
+        }
+        return total;
+    }
 }

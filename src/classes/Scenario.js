@@ -1,4 +1,5 @@
 import Schedule from './Schedule.js'
+import * as ExcelJS from 'exceljs'
 export default class Scenario{
     
     title = "blue Scenario";
@@ -55,21 +56,26 @@ export default class Scenario{
         }
         return insuranceCosts;
     }
+    getAdditionalCosts(){
+        var total = 0;
+        for(let s of this.schedules){
+            total += s.calculateAdditionalCosts();
+        }
+        return total;
+    }
     getTotalCost(){
         //adds up the total cost of the shedules in this scenario
-       return this.getSalaryCosts() + this.getInsuranceCosts();
+       return this.getSalaryCosts() + this.getInsuranceCosts() + this.getAdditionalCosts();
     }
     getFullyAllocatedCost(){
         //adds the Associated Payroll Cost to the total
         //OOh, we probably don't count the associated payroll on top of insurance. 
         var salaryTotal = this.getSalaryCosts();
         var insuranceTotal = this.getInsuranceCosts();  
-        console.log(salaryTotal);
-        console.log(insuranceTotal);      
+        var additionalCost = this.getAdditionalCosts();    
         //apply the allocated costs
         salaryTotal *= (1 + this.percentAssociatedCosts/100);
-        console.log(salaryTotal);
-        return salaryTotal + insuranceTotal;
+        return salaryTotal + insuranceTotal + additionalCost;
     }
 
     advanceLast(newTitle, percentage, advanceFTE = true){
@@ -77,5 +83,28 @@ export default class Scenario{
         let newSchedule = this.schedules.at(-1).copySchedule(newTitle, percentage, advanceFTE);
         this.schedules.push(newSchedule);   
 
+    }
+    async exportToExcel(){
+        const workbook = new ExcelJS.Workbook();
+        workbook.creator = "McLainonline.com";
+        workbook.lastModifiedBy = "mclainonline.com";
+        workbook.created = new Date();
+        workbook.modified = new Date();
+
+        workbook.properties.date1904 = true;
+        workbook.calcProperties.fullCalcOnLoad = true;
+        workbook.views = [
+            { x:0, y: 0, width: 10000, height: 20000, firstSheet: 0, activeTab: 1, visibility: 'visible'
+
+        }]
+        const summarySheet = workbook.addWorksheet("Summary");
+        summarySheet.addRow(["Topci", "Value"]);
+        summarySheet.addRow(["Insurance Cost", this.getInsuranceCosts()]);
+        summarySheet.addRow(["Salary Cost", this.getSalaryCosts()]);
+        summarySheet.addRow(["Insurance + Salary Cost", this.getSalaryCosts()]);
+        summarySheet.addRow(["Associated Payroll Cost", this.percentAssociatedCosts]);
+        summarySheet.addRow(["Fully Allocated Cost", this.getFullyAllocatedCost()]);
+        return workbook;
+        
     }
 }

@@ -32,9 +32,15 @@
             <tr>
                 <td>Salary Cost:</td>
                 <td> {{ USDollar.format(scenario.getSalaryCosts()) }}</td>
+            </tr>
+            <tr>
+                <td>
+                    Additional Costs:
+                </td>
+                <td>{{ USDollar.format(scenario.getAdditionalCosts()) }}</td>
             </tr>   
             <tr>
-                <td>Insurance + Salary Costs:</td>
+                <td>Total Costs:</td>
                 <td>{{  USDollar.format(scenario.getTotalCost()) }}</td>
             </tr>    
             <tr>
