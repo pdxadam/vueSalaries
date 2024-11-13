@@ -160,7 +160,7 @@ export default class Schedule{
             //bottom row: add previous. Every one before that, change it to the previous
             var rowNum = newSchedule.cells.length - 1;
             for (var c = 0; c < newSchedule.cells[rowNum].length; c++){
-                newSchedule.cells[rowNum][c].fte += newSchedule.cells[rowNum-1][c].fte;
+                newSchedule.cells[rowNum][c].fte =  parseFloat(newSchedule.cells[rowNum][c].fte) + parseFloat(newSchedule.cells[rowNum-1][c].fte);
             }
             //now loop backwards through the rows and shift the previous row's value to the current row's location
         
