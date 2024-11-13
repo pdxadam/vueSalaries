@@ -21,12 +21,12 @@
         props.schedule.addRow();
     }
     function removeColumn(i){
-        if (confirm("Are you sure you want to delete this entire column?")){
+        if (confirm("Are you sure you want to delete this entire column? (FTE Entries will be lost)")){
             props.schedule.removeColumn(i);
         }
     }
     function removeRow(i){
-        if (confirm("Delete this row?")){
+        if (confirm("Delete this row? (FTE Entries will be lost)")){
             props.schedule.removeRow(i);
         }
     }
