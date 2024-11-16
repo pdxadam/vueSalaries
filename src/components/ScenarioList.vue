@@ -84,15 +84,36 @@
         const summarySheet = workbook.addWorksheet("Summary");
         summarySheet.addRow(["Title:", selectedScenario.value.title]);
         summarySheet.addRow(["Description:", selectedScenario.value.description]);
+        summarySheet.addRow(["Associated Cost %", selectedScenario.value.percentAssociatedCosts]);
         summarySheet.addRow();
+        let SummaryRow = ["Summary Information", "Total"];
+        let insuranceRow = ["Insurance Cost", selectedScenario.value.getInsuranceCosts()];
+        let addCostRow = ["Additional Costs", selectedScenario.value.getAdditionalCosts()];
+        let SalaryCostRow = ["Salary Cost", selectedScenario.value.getSalaryCosts()];
+        let subtotalRow = ["Insurance + Add'l + Salary Cost", selectedScenario.value.getTotalCost()];
+        let fullyAllocatedrow = ["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()];
 
-        summarySheet.addRow(["Summary Information"]);
-        summarySheet.addRow(["Insurance Cost", selectedScenario.value.getInsuranceCosts()]);
-        summarySheet.addRow(["Additional Costs", selectedScenario.value.getAdditionalCosts()]);
-        summarySheet.addRow(["Salary Cost", selectedScenario.value.getSalaryCosts()]);
-        summarySheet.addRow(["Insurance + Add'l + Salary Cost", selectedScenario.value.getTotalCost()]);
-        summarySheet.addRow(["Associated Payroll Cost (Percent)", selectedScenario.value.percentAssociatedCosts]);
-        summarySheet.addRow(["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()]);
+        for (let schedule of selectedScenario.value.schedules){
+            SummaryRow.push(schedule.title);
+            insuranceRow.push(schedule.calcInsuranceCost());
+            addCostRow.push(schedule.calculateAdditionalCosts());
+            SalaryCostRow.push(schedule.getSalaryCost());
+            subtotalRow.push(schedule.getAnnualCost());
+            fullyAllocatedrow.push(schedule.calcFullyAllocatedCost(selectedScenario.value.percentAssociatedCosts));
+        }
+        summarySheet.addRow(SummaryRow);
+        summarySheet.addRow(insuranceRow);
+        summarySheet.addRow(addCostRow);
+        summarySheet.addRow(SalaryCostRow);
+        summarySheet.addRow(subtotalRow);
+        summarySheet.addRow(fullyAllocatedrow);
+        
+        // summarySheet.addRow(["Insurance Cost", selectedScenario.value.getInsuranceCosts()]);
+        // summarySheet.addRow(["Additional Costs", selectedScenario.value.getAdditionalCosts()]);
+        // summarySheet.addRow(["Salary Cost", selectedScenario.value.getSalaryCosts()]);
+        // summarySheet.addRow(["Insurance + Add'l + Salary Cost", selectedScenario.value.getTotalCost()]);
+        // summarySheet.addRow(["Associated Payroll Cost (Percent)", selectedScenario.value.percentAssociatedCosts]);
+        // summarySheet.addRow(["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()]);
         
         for (let schedule of selectedScenario.value.schedules){
             const s = workbook.addWorksheet(schedule.title);
