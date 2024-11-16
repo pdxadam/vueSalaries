@@ -79,8 +79,14 @@ export default class Schedule{
         }
         return totalCost * (this.durationInMonths / 12);
     }
+    calcAssociatedSalary(associatedPercent){
+        return this.getSalaryCost() * (1 + associatedPercent/100);
+    }
+    calcFullyAllocatedCost(associatedPercent){
+        return this.calcAssociatedSalary(associatedPercent) + this.calcInsuranceCost() + this.calculateAdditionalCosts();
+    }
     getAnnualCost(){
-        return this.getSalaryCost() + this.calcInsuranceCost();
+        return this.getSalaryCost() + this.calcInsuranceCost() + this.calculateAdditionalCosts();
     }
     setInsurance(monthlyContribution){
         this.insurance = monthlyContribution;

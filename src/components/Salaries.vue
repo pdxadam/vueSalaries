@@ -7,6 +7,7 @@
     //TODO: Is it possible to navigate the editing mode with arrow keys?
     const props = defineProps({
         schedule: Schedule,
+        associatedCosts: Number,
     });
     const inEditMode = ref(false);
     const adjustPercentAmt = ref(0);
@@ -107,9 +108,18 @@
                 <td>{{USDollar.format(schedule.getSalaryCost()) }}</td>
             </tr>
             <tr>
+                <td>Fully Allocated Salary Cost: {{ associatedCosts }}%</td> 
+                <td>{{ USDollar.format(schedule.calcAssociatedSalary(associatedCosts)) }}</td>
+            </tr>
+            <tr>
                 <td>Total Cost: </td>
                 <td>{{ USDollar.format(schedule.getAnnualCost()) }}</td>
             </tr>
+            <tr>
+                <td>Fully Allocated Cost:</td> 
+                <td>{{ USDollar.format(schedule.calcFullyAllocatedCost(associatedCosts)) }}</td>
+            </tr>
+            
         </tbody>
         </table>
     </b-collapse>

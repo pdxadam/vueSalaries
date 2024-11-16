@@ -58,7 +58,7 @@
                     <modal_newScenario @close="closeModal()"  @copySchedule="copySchedule" @createScenario="createScenario" :schedule = schedule />
             </b-modal>
             <b-button @click="deleteSchedule(index);">Delete Schedule</b-button>
-            <Salaries :schedule = schedule />
+            <Salaries :schedule = schedule :associatedCosts = scenario.percentAssociatedCosts />
         </b-tab-item>
     </b-tabs>
 </section>
