@@ -84,7 +84,8 @@
         const summarySheet = workbook.addWorksheet("Summary");
         summarySheet.addRow(["Title:", selectedScenario.value.title]);
         summarySheet.addRow(["Description:", selectedScenario.value.description]);
-        summarySheet.addRow(["Associated Cost %", selectedScenario.value.percentAssociatedCosts]);
+        let r = summarySheet.addRow(["Associated Cost %", parseFloat(selectedScenario.value.percentAssociatedCosts/100)]);
+        r.getCell(2).numFmt = '0.00%';
         summarySheet.addRow();
         let SummaryRow = ["Summary Information", "Total"];
         let insuranceRow = ["Insurance Cost", selectedScenario.value.getInsuranceCosts()];
@@ -101,31 +102,33 @@
             subtotalRow.push(schedule.getAnnualCost());
             fullyAllocatedrow.push(schedule.calcFullyAllocatedCost(selectedScenario.value.percentAssociatedCosts));
         }
+        
         summarySheet.addRow(SummaryRow);
-        summarySheet.addRow(insuranceRow);
-        summarySheet.addRow(addCostRow);
-        summarySheet.addRow(SalaryCostRow);
-        summarySheet.addRow(subtotalRow);
-        summarySheet.addRow(fullyAllocatedrow);
+        let rowset = [];
+        rowset.push(summarySheet.addRow(insuranceRow));
+        rowset.push(summarySheet.addRow(addCostRow));
+        rowset.push(summarySheet.addRow(SalaryCostRow));
+        rowset.push(summarySheet.addRow(subtotalRow));
+        rowset.push(summarySheet.addRow(fullyAllocatedrow));
+        for (let r of rowset){
+            for (var c = 2; c <= selectedScenario.value.schedules.length + 2; c++){
+                r.getCell(c).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
+            }
+        }
         
-        // summarySheet.addRow(["Insurance Cost", selectedScenario.value.getInsuranceCosts()]);
-        // summarySheet.addRow(["Additional Costs", selectedScenario.value.getAdditionalCosts()]);
-        // summarySheet.addRow(["Salary Cost", selectedScenario.value.getSalaryCosts()]);
-        // summarySheet.addRow(["Insurance + Add'l + Salary Cost", selectedScenario.value.getTotalCost()]);
-        // summarySheet.addRow(["Associated Payroll Cost (Percent)", selectedScenario.value.percentAssociatedCosts]);
-        // summarySheet.addRow(["Fully Allocated Cost", selectedScenario.value.getFullyAllocatedCost()]);
-        
+ 
         for (let schedule of selectedScenario.value.schedules){
             const s = workbook.addWorksheet(schedule.title);
             //title/summary info
-            s.addRow(["schedule title: ", schedule.title]);
+            s.addRow(["Schedule Title: ", schedule.title]);
             s.addRow(["Description:", schedule.description]);
-            s.addRow(["Insurance Contribution", schedule.insurance]);
+            let r = s.addRow(["Insurance Contribution", parseFloat(schedule.insurance)]);
+            r.getCell(2).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
             s.addRow();
             s.addRow(["Additional Costs:"])
             s.addRow(["title", "Amount", "Times/Year", "Per FTE?"]);
             for (let cost of schedule.additionalCosts){
-                s.addRow([cost.title, cost.amount, cost.timesPerYear, cost.perMember])
+                s.addRow([cost.title, parseFloat(cost.amount), cost.timesPerYear, cost.perMember]).getCell(2).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
             }
             //handling the salaries
             s.addRow();
@@ -135,7 +138,10 @@
                 for (let cell of schedule.cells[i]){
                     newRow.push(parseFloat(cell.salary));
                 }
-                s.addRow(newRow);
+                let salaryRow = s.addRow(newRow);
+                for (var c = 2; c <= schedule.cells[i].length + 1; c++){
+                    salaryRow.getCell(c).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
+                }
             }
             s.addRow();
             s.addRow();
